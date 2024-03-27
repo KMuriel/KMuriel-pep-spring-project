@@ -1,10 +1,16 @@
 package com.example.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.text.html.parser.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
@@ -48,6 +55,60 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
+    @PostMapping("/login")
+    public ResponseEntity<Account> loginCheck(@RequestBody Account newAccount)//change stuff here
+    {
+        Account existingUser = accountService.checkLogin(newAccount);
+        if (existingUser != null)
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(existingUser); //check this
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); //check over this
+        }
+    }
 
+    //STEP 3 HERE AKA CREATE NEW MESSAGES
+    @PostMapping("/messages")
+    public ResponseEntity<Message> createMessage(@RequestBody Message message)
+    {
+        if (not all goes well)
+        {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
 
+    }
+    //STEP 4  RETRIEVE ALL MESSAGES
+    @GetMapping("/messages")
+    public ResponseEntity<Message> getAllMessages(@RequestBody Message message)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(allMessages);
+    }
+
+    //STEP 5 GET MESSAGE BY ID
+    @GetMapping("/messages/{message_id}")
+    public ResponseEntity<Message> getMessageById(@RequestBody Message message)
+    {
+        return null;
+    }
+    //STEP 6 DELETE MESSAGE BY ID
+    @DeleteMapping("/messages/{message_id}")
+    public ResponseEntity<Message> deleteMessageById(@RequestBody Message message)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+    //STEP 7 UPDATE MESSAGE BY ID 
+    @PatchMapping("/messages/{message_id}")
+    public ResponseEntity<Message> updateMessageById(@RequestBody Message message)
+    {
+        return null;
+    }
+    //STEP 8 RETRIEVE ALL MESSAGES BY USER
+    @GetMapping("accounts/{account_id}/messages")
+    public ResponseEntity<Message> getMessageByUser(@RequestBody Message message)
+    {
+        return null;
+    }
 }

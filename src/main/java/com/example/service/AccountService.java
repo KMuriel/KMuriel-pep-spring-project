@@ -34,4 +34,21 @@ public class AccountService {
     {
         return accountRepository.findAccountByUsername(username);
     }
+
+    public Account checkLogin(Account account)
+    {
+        String username = account.getUsername();
+        String password = account.getPassword();
+
+        if (account.getUsername().equals(username) && account.getPassword().equals(password))
+        {
+            return accountRepository.save(account);
+        }
+        return null;
+    }
+
+    public Account findByPassword(String password) // check
+    {
+        return accountRepository.findAccountByPassword(password); // check
+    }
 }

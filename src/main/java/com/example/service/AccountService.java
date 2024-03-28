@@ -40,8 +40,4 @@ public class AccountService {
         return accountRepository.findAccountByUsername_AndPassword(account.getUsername(), account.getPassword());
     }
 
-    public Account findByPassword(String password) // check
-    {
-        return accountRepository.findAccountByPassword(password); // check
-    }
 }

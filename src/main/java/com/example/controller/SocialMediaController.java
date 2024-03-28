@@ -6,11 +6,13 @@ import java.util.List;
 import javax.swing.text.html.parser.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -83,33 +85,49 @@ public class SocialMediaController {
     }
     //STEP 4  RETRIEVE ALL MESSAGES
     @GetMapping("/messages")
-    public ResponseEntity<Message> getAllMessages(@RequestBody Message message)
+    public ResponseEntity<List<Message>> getAllMessages()
     {
+        List<Message> allMessages = messageService.getAllMessages();
         return ResponseEntity.status(HttpStatus.OK).body(allMessages);
     }
 
     //STEP 5 GET MESSAGE BY ID
     @GetMapping("/messages/{message_id}")
-    public ResponseEntity<Message> getMessageById(@RequestBody Message message)
+    public ResponseEntity<Message> getMessageById(@PathVariable int message_id)
     {
-        return null;
+        Message existingMessage = messageService.getMessageById(message_id);
+
+        if (existingMessage == null)
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(existingMessage);
     }
     //STEP 6 DELETE MESSAGE BY ID
     @DeleteMapping("/messages/{message_id}")
-    public ResponseEntity<Message> deleteMessageById(@RequestBody Message message)
+    public ResponseEntity<?> deleteMessageById(@PathVariable int message_id)
     {
+        if (messageService.deleteMessage(message_id))
+        {
+            return ResponseEntity.status(HttpStatus.OK).body(1);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
     //STEP 7 UPDATE MESSAGE BY ID 
     @PatchMapping("/messages/{message_id}")
-    public ResponseEntity<Message> updateMessageById(@RequestBody Message message)
+    public ResponseEntity<?> updateMessageById(@PathVariable int message_id, @RequestBody Message message)
     {
-        return null;
+        if (messageService.updateMessage(message_id, message))
+        {
+        return ResponseEntity.status(HttpStatus.OK).body(1);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
     //STEP 8 RETRIEVE ALL MESSAGES BY USER
     @GetMapping("accounts/{account_id}/messages")
-    public ResponseEntity<Message> getMessageByUser(@RequestBody Message message)
+    public ResponseEntity<?> getMessageByUser(@PathVariable int account_id)
     {
-        return null;
+        List<Message> messageList = messageService.getMessagesByUser(account_id);
+        return ResponseEntity.status(HttpStatus.OK).body(messageList);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.entity.Message;
 import com.example.repository.MessageRepository;
 import com.example.repository.AccountRepository;
-import com.example.entity.Account;
 
 @Service
 @Transactional
@@ -32,7 +31,7 @@ public class MessageService {
         {    
             return null;
         }
-       // Account account = accountRepository.getById(null)
+       
         if (accountRepository.findById(message.getPosted_by()).isEmpty())
         {    
             return null;
@@ -44,46 +43,43 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    public Message getAllMessagesById(int message_id) {
+    public Message getMessageById(int message_id) {
 
-        return messageRepository.findById(message_id).get();        
+        Optional<Message> optionalMessage = messageRepository.findById(message_id);
+        if (optionalMessage.isPresent())
+        {
+            return optionalMessage.get();
+        }
+        return null;        
     }
 
-    //should this return void or Message??
-    public void deleteMessage(int message_id) {
-        /*Message message = messageRepository.getAllMessagesById(message_id);
-        if (message_id.getMessage_text == null)
+    public boolean deleteMessage(int message_id) {
+        Message message = getMessageById(message_id);
+        if (message == null)
         {
-            return null;
+            return false;
         }
-        messageDAO.deleteMessage(message);*/   
-        //return message;
         messageRepository.deleteById(message_id);
+        return true;
     }
 
-    public Message updateMessage(int message_id, Message replacementMessage)
+    public boolean updateMessage(int message_id, Message replacementMessage)
     {
-        /*if (messageRepository.getAllMessagesById(message_id) == null)
+        String updatedText = replacementMessage.getMessage_text();
+        if (updatedText.length() == 0 || updatedText.length() > 255)
         {
-            return null;
+            return false;
         }
-        if (message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255)
-        {
-            return null;
-        }
-        messageRepository.updateMessage(message_id, message);
-        return messageRepository.getAllMessagesById(message_id);*/
-
         Optional<Message> optionalMessage = messageRepository.findById(message_id);
         if(optionalMessage.isPresent())
         {
             Message message = optionalMessage.get();
             message.setMessage_text(replacementMessage.getMessage_text());
             messageRepository.save(message);
-            return message;
+            return true;
         }
         
-        return null;
+        return false;
     }
 
     public List<Message> getMessagesByUser(int posted_by)

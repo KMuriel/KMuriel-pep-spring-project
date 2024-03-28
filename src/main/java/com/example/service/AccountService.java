@@ -37,14 +37,7 @@ public class AccountService {
 
     public Account checkLogin(Account account)
     {
-        String username = account.getUsername();
-        String password = account.getPassword();
-
-        if (account.getUsername().equals(username) && account.getPassword().equals(password))
-        {
-            return accountRepository.save(account);
-        }
-        return null;
+        return accountRepository.findAccountByUsername_AndPassword(account.getUsername(), account.getPassword());
     }
 
     public Account findByPassword(String password) // check

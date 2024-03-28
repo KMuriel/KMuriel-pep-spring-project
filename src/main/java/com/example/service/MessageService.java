@@ -9,16 +9,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.entity.Message;
 import com.example.repository.MessageRepository;
+import com.example.repository.AccountRepository;
+import com.example.entity.Account;
 
 @Service
 @Transactional
 public class MessageService {
     MessageRepository messageRepository;
+    AccountRepository accountRepository;
     @Autowired
-    public MessageService(MessageRepository messageRepository){
+    public MessageService(MessageRepository messageRepository, AccountRepository accountRepository){
         this.messageRepository = messageRepository;
+        this.accountRepository = accountRepository;
     }
-
+    
     public Message createMessage(Message message){
         if (message.getMessage_text().length() <= 0)
         {
@@ -28,7 +32,8 @@ public class MessageService {
         {    
             return null;
         }
-        if (message.getPosted_by() <= 0)
+       // Account account = accountRepository.getById(null)
+        if (accountRepository.findById(message.getPosted_by()).isEmpty())
         {    
             return null;
         }

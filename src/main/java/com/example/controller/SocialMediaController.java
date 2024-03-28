@@ -56,9 +56,9 @@ public class SocialMediaController {
 
     }
     @PostMapping("/login")
-    public ResponseEntity<Account> loginCheck(@RequestBody Account newAccount)//change stuff here
+    public ResponseEntity<Account> loginCheck(@RequestBody Account account)
     {
-        Account existingUser = accountService.checkLogin(newAccount);
+        Account existingUser = accountService.checkLogin(account);
         if (existingUser != null)
         {
             return ResponseEntity.status(HttpStatus.OK).body(existingUser); //check this
@@ -73,11 +73,12 @@ public class SocialMediaController {
     @PostMapping("/messages")
     public ResponseEntity<Message> createMessage(@RequestBody Message message)
     {
-        if (not all goes well)
+        Message newMessage = messageService.createMessage(message);
+        if (newMessage == null)
         {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(newMessage);
 
     }
     //STEP 4  RETRIEVE ALL MESSAGES
